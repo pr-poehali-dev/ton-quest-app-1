@@ -5,7 +5,7 @@ import { Progress } from '@/components/ui/progress';
 import Icon from '@/components/ui/icon';
 import { questions } from '@/data/questions';
 import { hapticFeedback } from '@/lib/telegram';
-import { getStoredStats, updateStats, processReferralBonus, checkAchievements } from '@/lib/storage';
+import { getStoredStats, updateStats, processReferralBonus, checkAchievements, saveToLeaderboard } from '@/lib/storage';
 
 interface GameScreenProps {
   onBack: () => void;
@@ -165,6 +165,8 @@ const GameScreen = ({ onBack, userName, userId }: GameScreenProps) => {
         achievements: [...new Set([...currentStats.achievements, ...newAchievements])],
       });
     }
+    
+    saveToLeaderboard(userId, userName);
   };
 
   const restartGame = () => {

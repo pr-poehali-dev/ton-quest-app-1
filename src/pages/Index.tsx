@@ -59,7 +59,7 @@ const Index = () => {
       case 'game':
         return <GameScreen onBack={() => handleScreenChange('home')} userName={userName} userId={userId} />;
       case 'leaderboard':
-        return <LeaderboardScreen onBack={() => handleScreenChange('home')} userId={userId} />;
+        return <LeaderboardScreen onBack={() => handleScreenChange('home')} userId={userId} userName={userName} />;
       case 'profile':
         return <ProfileScreen onBack={() => handleScreenChange('home')} userName={userName} setUserName={setUserName} userId={userId} />;
       default:

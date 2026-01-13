@@ -1,25 +1,39 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
+import { useState, useEffect } from 'react';
+import { getLeaderboard, getUserRank, getStoredStats } from '@/lib/storage';
+import type { LeaderboardEntry } from '@/lib/storage';
 
 interface LeaderboardScreenProps {
   onBack: () => void;
   userId: number | null;
+  userName: string;
 }
 
-const LeaderboardScreen = ({ onBack, userId }: LeaderboardScreenProps) => {
-  const leaderboardData = [
-    { rank: 1, name: 'CryptoMaster', score: 2580, avatar: '👑' },
-    { rank: 2, name: 'TON Expert', score: 2340, avatar: '🏆' },
-    { rank: 3, name: 'BlockchainPro', score: 2120, avatar: '🥉' },
-    { rank: 4, name: 'TON Developer', score: 1890, avatar: '💎' },
-    { rank: 5, name: 'Web3 Guru', score: 1650, avatar: '⚡' },
-    { rank: 6, name: 'Smart Contract Dev', score: 1420, avatar: '🚀' },
-    { rank: 7, name: 'Durov Fan', score: 1280, avatar: '✈️' },
-    { rank: 8, name: 'TON Validator', score: 1100, avatar: '🔥' },
-    { rank: 9, name: 'Crypto Ninja', score: 980, avatar: '🥷' },
-    { rank: 10, name: 'TON Newbie', score: 850, avatar: '🌟' },
-  ];
+const LeaderboardScreen = ({ onBack, userId, userName }: LeaderboardScreenProps) => {
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [userRank, setUserRank] = useState<number | null>(null);
+  const [userStats, setUserStats] = useState(getStoredStats(userId));
+
+  useEffect(() => {
+    const entries = getLeaderboard();
+    setLeaderboard(entries);
+    
+    if (userId) {
+      const rank = getUserRank(userId);
+      setUserRank(rank);
+      setUserStats(getStoredStats(userId));
+    }
+  }, [userId]);
+
+  const leaderboardData = leaderboard.map((entry, index) => ({
+    rank: index + 1,
+    name: entry.name,
+    score: entry.totalScore,
+    avatar: entry.avatar,
+    isCurrentUser: entry.userId === userId,
+  }));
 
   const getRankColor = (rank: number) => {
     switch (rank) {
@@ -95,27 +109,37 @@ const LeaderboardScreen = ({ onBack, userId }: LeaderboardScreenProps) => {
           ))}
         </div>
 
-        <Card className="p-6 bg-gradient-to-br from-primary/10 to-secondary/10 border-2 border-primary/20">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-2xl font-bold">
-              😎
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center gap-2">
-                <span className="font-bold text-muted-foreground">#156</span>
-                <span className="font-bold">Твоя позиция</span>
+        {userId && userStats.totalScore > 0 && (
+          <Card className="p-6 bg-gradient-to-br from-primary/10 to-secondary/10 border-2 border-primary/20">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-2xl font-bold">
+                😎
               </div>
-              <div className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
-                <Icon name="Coins" size={14} className="text-accent" />
-                420 очков
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  {userRank && <span className="font-bold text-muted-foreground">#{userRank}</span>}
+                  <span className="font-bold">{userRank ? 'Твоя позиция' : 'Сыграй чтобы попасть в рейтинг'}</span>
+                </div>
+                <div className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
+                  <Icon name="Coins" size={14} className="text-accent" />
+                  {userStats.totalScore} очков
+                </div>
               </div>
+              <Button size="sm" className="bg-gradient-to-r from-primary to-secondary" onClick={onBack}>
+                <Icon name="TrendingUp" size={16} className="mr-1" />
+                Играть
+              </Button>
             </div>
-            <Button size="sm" className="bg-gradient-to-r from-primary to-secondary">
-              <Icon name="TrendingUp" size={16} className="mr-1" />
-              Улучшить
-            </Button>
-          </div>
-        </Card>
+          </Card>
+        )}
+
+        {leaderboard.length === 0 && (
+          <Card className="p-8 text-center">
+            <Icon name="Users" size={48} className="mx-auto mb-4 text-muted-foreground" />
+            <h3 className="text-xl font-bold mb-2">Рейтинг пуст</h3>
+            <p className="text-muted-foreground">Стань первым в таблице лидеров!</p>
+          </Card>
+        )}
       </div>
     </div>
   );

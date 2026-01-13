@@ -1,4 +1,4 @@
-interface GameStats {
+export interface GameStats {
   totalGames: number;
   totalCorrectAnswers: number;
   bestScore: number;
@@ -113,3 +113,64 @@ export const checkAchievements = (stats: GameStats): string[] => {
 
   return newAchievements;
 };
+
+export interface LeaderboardEntry {
+  userId: number;
+  name: string;
+  totalScore: number;
+  bestScore: number;
+  avatar: string;
+}
+
+const LEADERBOARD_KEY = 'ton-quiz-leaderboard';
+
+export const saveToLeaderboard = (userId: number, name: string): void => {
+  const stats = getStoredStats(userId);
+  if (stats.totalScore === 0) return;
+
+  const leaderboard = getAllLeaderboardEntries();
+  const existingIndex = leaderboard.findIndex(entry => entry.userId === userId);
+
+  const entry: LeaderboardEntry = {
+    userId,
+    name,
+    totalScore: stats.totalScore,
+    bestScore: stats.bestScore,
+    avatar: getRandomAvatar(),
+  };
+
+  if (existingIndex >= 0) {
+    leaderboard[existingIndex] = entry;
+  } else {
+    leaderboard.push(entry);
+  }
+
+  localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(leaderboard));
+};
+
+export const getAllLeaderboardEntries = (): LeaderboardEntry[] => {
+  const stored = localStorage.getItem(LEADERBOARD_KEY);
+  if (!stored) return [];
+
+  try {
+    return JSON.parse(stored);
+  } catch {
+    return [];
+  }
+};
+
+export const getLeaderboard = (): LeaderboardEntry[] => {
+  const entries = getAllLeaderboardEntries();
+  return entries.sort((a, b) => b.totalScore - a.totalScore);
+};
+
+export const getUserRank = (userId: number): number | null => {
+  const leaderboard = getLeaderboard();
+  const index = leaderboard.findIndex(entry => entry.userId === userId);
+  return index >= 0 ? index + 1 : null;
+};
+
+const getRandomAvatar = (): string => {
+  const avatars = ['😎', '🚀', '💎', '⚡', '🔥', '👑', '🏆', '🥷', '🌟', '✨', '💪', '🎯', '🦾', '🧠', '🎮'];
+  return avatars[Math.floor(Math.random() * avatars.length)];
+};}
