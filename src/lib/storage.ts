@@ -61,7 +61,7 @@ export const generateReferralCode = (userId: number): string => {
 };
 
 export const getReferralLink = (referralCode: string): string => {
-  const botUsername = 'YourBotUsername';
+  const botUsername = 'cinema_and_moneybot';
   return `https://t.me/${botUsername}?start=${referralCode}`;
 };
 
