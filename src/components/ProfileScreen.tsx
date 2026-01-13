@@ -2,9 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import Icon from '@/components/ui/icon';
-import { useState, useEffect } from 'react';
-import { getStoredStats, updateStats, generateReferralCode, getReferralLink } from '@/lib/storage';
-import { useToast } from '@/hooks/use-toast';
+import { useState } from 'react';
 
 interface ProfileScreenProps {
   onBack: () => void;
@@ -16,46 +14,22 @@ interface ProfileScreenProps {
 const ProfileScreen = ({ onBack, userName, setUserName, userId }: ProfileScreenProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [tempName, setTempName] = useState(userName);
-  const { toast } = useToast();
-  const [stats, setStats] = useState(getStoredStats(userId));
 
-  useEffect(() => {
-    const currentStats = getStoredStats(userId);
-    if (userId && !currentStats.referralCode) {
-      const newCode = generateReferralCode(userId);
-      updateStats(userId, { referralCode: newCode });
-      setStats(getStoredStats(userId));
-    } else {
-      setStats(currentStats);
-    }
-  }, [userId]);
-
-  const statsData = [
-    { label: 'Всего игр', value: stats.totalGames.toString(), icon: 'Gamepad2', color: 'text-primary' },
-    { label: 'Правильных ответов', value: stats.totalCorrectAnswers.toString(), icon: 'CheckCircle2', color: 'text-green-400' },
-    { label: 'Лучший результат', value: stats.bestScore.toString(), icon: 'Trophy', color: 'text-accent' },
-    { label: 'Уровень', value: stats.level.toString(), icon: 'Star', color: 'text-secondary' },
+  const stats = [
+    { label: 'Всего игр', value: '42', icon: 'Gamepad2', color: 'text-primary' },
+    { label: 'Правильных ответов', value: '156', icon: 'CheckCircle2', color: 'text-green-400' },
+    { label: 'Лучший результат', value: '420', icon: 'Trophy', color: 'text-accent' },
+    { label: 'Уровень', value: '12', icon: 'Star', color: 'text-secondary' },
   ];
 
   const achievements = [
-    { id: 'newcomer', title: 'Новичок', description: 'Ответил на 10 вопросов', icon: '🌱', unlocked: stats.achievements.includes('newcomer') },
-    { id: 'enthusiast', title: 'TON Энтузиаст', description: 'Ответил на 50 вопросов', icon: '💎', unlocked: stats.achievements.includes('enthusiast') },
-    { id: 'expert', title: 'Знаток блокчейна', description: 'Ответил на 100 вопросов', icon: '🏆', unlocked: stats.achievements.includes('expert') },
-    { id: 'durov', title: 'Дуров одобряет', description: 'Набрал 500+ очков за игру', icon: '✈️', unlocked: stats.achievements.includes('durov') },
-    { id: 'master', title: 'Криптомастер', description: 'Ответил на 200 вопросов', icon: '👑', unlocked: stats.achievements.includes('master') },
-    { id: 'legend', title: 'Легенда TON', description: 'Набрал 1000+ очков за игру', icon: '⚡', unlocked: stats.achievements.includes('legend') },
+    { id: 1, title: 'Новичок', description: 'Ответил на 10 вопросов', icon: '🌱', unlocked: true },
+    { id: 2, title: 'TON Энтузиаст', description: 'Ответил на 50 вопросов', icon: '💎', unlocked: true },
+    { id: 3, title: 'Знаток блокчейна', description: 'Ответил на 100 вопросов', icon: '🏆', unlocked: true },
+    { id: 4, title: 'Дуров одобряет', description: 'Набрал 500+ очков за игру', icon: '✈️', unlocked: false },
+    { id: 5, title: 'Криптомастер', description: 'Ответил на 200 вопросов', icon: '👑', unlocked: false },
+    { id: 6, title: 'Легенда TON', description: 'Набрал 1000+ очков за игру', icon: '⚡', unlocked: false },
   ];
-
-  const copyReferralLink = () => {
-    if (stats.referralCode) {
-      const link = getReferralLink(stats.referralCode);
-      navigator.clipboard.writeText(link);
-      toast({
-        title: 'Скопировано!',
-        description: 'Реферальная ссылка скопирована в буфер обмена',
-      });
-    }
-  };
 
   const handleSaveName = () => {
     if (tempName.trim()) {
@@ -114,7 +88,7 @@ const ProfileScreen = ({ onBack, userName, setUserName, userId }: ProfileScreenP
         </Card>
 
         <div className="grid grid-cols-2 gap-3">
-          {statsData.map((stat, index) => (
+          {stats.map((stat, index) => (
             <Card key={index} className="p-4 bg-card/50 backdrop-blur-lg hover:bg-card/70 transition-all hover:scale-105">
               <div className="flex items-center gap-3">
                 <div className={`${stat.color}`}>
@@ -166,52 +140,18 @@ const ProfileScreen = ({ onBack, userName, setUserName, userId }: ProfileScreenP
           </div>
         </div>
 
-        <Card className="p-6 bg-gradient-to-br from-blue-500/10 to-purple-500/10 border-2 border-blue-500/20">
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <Icon name="Users" size={24} className="text-blue-400" />
-              <div className="flex-1">
-                <h3 className="font-bold text-lg">Реферальная система</h3>
-                <p className="text-sm text-muted-foreground">
-                  Приглашай друзей и получай 5% от их очков!
-                </p>
-              </div>
-            </div>
-            
-            {stats.referralCode && (
-              <>
-                <div className="flex gap-2">
-                  <Input
-                    value={getReferralLink(stats.referralCode)}
-                    readOnly
-                    className="text-xs"
-                  />
-                  <Button onClick={copyReferralLink} size="sm">
-                    <Icon name="Copy" size={16} />
-                  </Button>
-                </div>
-                
-                {stats.referralEarnings > 0 && (
-                  <div className="flex items-center gap-2 p-3 bg-green-500/10 rounded-lg">
-                    <Icon name="TrendingUp" size={20} className="text-green-400" />
-                    <div className="flex-1">
-                      <div className="text-sm font-bold">Заработано с рефералов</div>
-                      <div className="text-2xl font-black text-green-400">+{stats.referralEarnings}</div>
-                    </div>
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        </Card>
-
         <Card className="p-6 bg-gradient-to-br from-accent/10 to-yellow-500/10 border-2 border-accent/20">
           <div className="flex items-center gap-4">
-            <Icon name="Coins" size={32} className="text-accent" />
+            <Icon name="Gift" size={32} className="text-accent" />
             <div className="flex-1">
-              <h3 className="font-bold text-lg">Всего очков</h3>
-              <p className="text-3xl font-black text-accent">{stats.totalScore}</p>
+              <h3 className="font-bold text-lg">Обменяй очки на награды!</h3>
+              <p className="text-sm text-muted-foreground">
+                Копи баллы и получай промокоды и бонусы
+              </p>
             </div>
+            <Button className="bg-gradient-to-r from-accent to-yellow-500 text-background font-bold">
+              <Icon name="ArrowRight" size={16} />
+            </Button>
           </div>
         </Card>
       </div>

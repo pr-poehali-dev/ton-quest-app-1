@@ -12,7 +12,6 @@ declare global {
             language_code?: string;
             photo_url?: string;
           };
-          start_param?: string;
           auth_date: number;
           hash: string;
         };
@@ -145,7 +144,6 @@ export const hapticFeedback = {
   error: () => getTelegramWebApp()?.HapticFeedback.notificationOccurred('error'),
   warning: () => getTelegramWebApp()?.HapticFeedback.notificationOccurred('warning'),
   selection: () => getTelegramWebApp()?.HapticFeedback.selectionChanged(),
-  impact: () => getTelegramWebApp()?.HapticFeedback.impactOccurred('medium'),
 };
 
 export const showTelegramPopup = (message: string, title?: string) => {
@@ -159,12 +157,4 @@ export const showTelegramPopup = (message: string, title?: string) => {
 
 export const closeTelegramWebApp = () => {
   getTelegramWebApp()?.close();
-};
-
-export const getStartParam = (): string | null => {
-  const webapp = getTelegramWebApp();
-  if (!webapp) return null;
-  
-  const urlParams = new URLSearchParams(webapp.initData);
-  return urlParams.get('start_param');
 };
