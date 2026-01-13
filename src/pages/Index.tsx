@@ -5,7 +5,8 @@ import Icon from '@/components/ui/icon';
 import GameScreen from '@/components/GameScreen';
 import LeaderboardScreen from '@/components/LeaderboardScreen';
 import ProfileScreen from '@/components/ProfileScreen';
-import { getTelegramUser, initTelegramWebApp, isTelegramWebApp, hapticFeedback } from '@/lib/telegram';
+import { getTelegramUser, initTelegramWebApp, isTelegramWebApp, hapticFeedback, getStartParam } from '@/lib/telegram';
+import { getStoredStats, updateStats } from '@/lib/storage';
 
 type Screen = 'home' | 'game' | 'leaderboard' | 'profile';
 
@@ -22,6 +23,14 @@ const Index = () => {
     if (telegramUser) {
       setUserName(telegramUser.firstName + (telegramUser.lastName ? ` ${telegramUser.lastName}` : ''));
       setUserId(telegramUser.id);
+      
+      const startParam = getStartParam();
+      if (startParam && startParam.startsWith('TON')) {
+        const currentStats = getStoredStats(telegramUser.id);
+        if (!currentStats.referredBy) {
+          updateStats(telegramUser.id, { referredBy: startParam });
+        }
+      }
     }
     
     setTimeout(() => setIsLoading(false), 500);

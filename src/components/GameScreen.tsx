@@ -5,6 +5,7 @@ import { Progress } from '@/components/ui/progress';
 import Icon from '@/components/ui/icon';
 import { questions } from '@/data/questions';
 import { hapticFeedback } from '@/lib/telegram';
+import { getStoredStats, updateStats, processReferralBonus, checkAchievements } from '@/lib/storage';
 
 interface GameScreenProps {
   onBack: () => void;
@@ -23,6 +24,7 @@ const GameScreen = ({ onBack, userName, userId }: GameScreenProps) => {
   const [answeredQuestions, setAnsweredQuestions] = useState<Set<number>>(new Set());
   const [hints, setHints] = useState(3);
   const [usedHint, setUsedHint] = useState(false);
+  const [totalCorrectAnswers, setTotalCorrectAnswers] = useState(0);
 
   const currentQuestion = questions[currentQuestionIndex];
 
@@ -62,6 +64,9 @@ const GameScreen = ({ onBack, userName, userId }: GameScreenProps) => {
         const points = currentQuestion.difficulty === 'easy' ? 10 : currentQuestion.difficulty === 'medium' ? 20 : 30;
         setScore((prev) => prev + points);
         setAnsweredQuestions((prev) => new Set([...prev, currentQuestionIndex]));
+        setTotalCorrectAnswers((prev) => prev + 1);
+        
+        processReferralBonus(userId, points);
       }
 
       setTimeout(() => {
@@ -72,6 +77,7 @@ const GameScreen = ({ onBack, userName, userId }: GameScreenProps) => {
       setLives(0);
       setTimeout(() => {
         setGameOver(true);
+        saveGameStats();
       }, 1500);
     }
   };
@@ -141,6 +147,26 @@ const GameScreen = ({ onBack, userName, userId }: GameScreenProps) => {
     hapticFeedback.impact();
   };
 
+  const saveGameStats = () => {
+    if (!userId) return;
+    
+    const currentStats = getStoredStats(userId);
+    const newStats = updateStats(userId, {
+      totalGames: currentStats.totalGames + 1,
+      totalCorrectAnswers: currentStats.totalCorrectAnswers + totalCorrectAnswers,
+      bestScore: Math.max(currentStats.bestScore, score),
+      totalScore: currentStats.totalScore + score,
+      level: Math.floor((currentStats.totalCorrectAnswers + totalCorrectAnswers) / 10) + 1,
+    });
+    
+    const newAchievements = checkAchievements(newStats);
+    if (newAchievements.length > 0) {
+      updateStats(userId, {
+        achievements: [...new Set([...currentStats.achievements, ...newAchievements])],
+      });
+    }
+  };
+
   const restartGame = () => {
     setCurrentQuestionIndex(Math.floor(Math.random() * questions.length));
     setScore(0);
@@ -151,6 +177,7 @@ const GameScreen = ({ onBack, userName, userId }: GameScreenProps) => {
     setIsCorrect(null);
     setAnsweredQuestions(new Set());
     setUsedHint(false);
+    setTotalCorrectAnswers(0);
   };
 
   if (gameOver) {
