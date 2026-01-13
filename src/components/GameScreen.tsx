@@ -88,10 +88,25 @@ const GameScreen = ({ onBack, userName, userId }: GameScreenProps) => {
   };
 
   const watchAd = () => {
-    alert('🎬 Реклама воспроизводится... (интеграция будет добавлена)');
-    setLives(1);
-    setGameOver(false);
-    nextQuestion();
+    try {
+      // @ts-ignore - Monetag SDK
+      if (window.show_10450158) {
+        // @ts-ignore
+        window.show_10450158();
+        // После просмотра рекламы восстанавливаем жизнь
+        setTimeout(() => {
+          setLives(1);
+          setGameOver(false);
+          nextQuestion();
+        }, 1000);
+      } else {
+        console.error('Monetag SDK не загружен');
+        alert('Реклама временно недоступна. Попробуйте позже.');
+      }
+    } catch (error) {
+      console.error('Ошибка при показе рекламы:', error);
+      alert('Произошла ошибка при загрузке рекламы.');
+    }
   };
 
   const restartGame = () => {
