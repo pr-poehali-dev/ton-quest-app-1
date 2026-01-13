@@ -21,6 +21,8 @@ const GameScreen = ({ onBack, userName, userId }: GameScreenProps) => {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [answeredQuestions, setAnsweredQuestions] = useState<Set<number>>(new Set());
+  const [hints, setHints] = useState(3);
+  const [usedHint, setUsedHint] = useState(false);
 
   const currentQuestion = questions[currentQuestionIndex];
 
@@ -78,6 +80,7 @@ const GameScreen = ({ onBack, userName, userId }: GameScreenProps) => {
     setSelectedAnswer(null);
     setIsCorrect(null);
     setTimeLeft(20);
+    setUsedHint(false);
     
     let nextIndex;
     do {
@@ -109,6 +112,35 @@ const GameScreen = ({ onBack, userName, userId }: GameScreenProps) => {
     }
   };
 
+  const watchAdForHint = () => {
+    try {
+      // @ts-ignore - Monetag SDK
+      if (window.show_10450158) {
+        // @ts-ignore
+        window.show_10450158();
+        // После просмотра рекламы добавляем подсказку
+        setTimeout(() => {
+          setHints((prev) => prev + 1);
+          hapticFeedback.success();
+        }, 1000);
+      } else {
+        console.error('Monetag SDK не загружен');
+        alert('Реклама временно недоступна. Попробуйте позже.');
+      }
+    } catch (error) {
+      console.error('Ошибка при показе рекламы:', error);
+      alert('Произошла ошибка при загрузке рекламы.');
+    }
+  };
+
+  const useHint = () => {
+    if (hints <= 0 || usedHint || selectedAnswer !== null) return;
+    
+    setHints((prev) => prev - 1);
+    setUsedHint(true);
+    hapticFeedback.impact();
+  };
+
   const restartGame = () => {
     setCurrentQuestionIndex(Math.floor(Math.random() * questions.length));
     setScore(0);
@@ -118,6 +150,7 @@ const GameScreen = ({ onBack, userName, userId }: GameScreenProps) => {
     setSelectedAnswer(null);
     setIsCorrect(null);
     setAnsweredQuestions(new Set());
+    setUsedHint(false);
   };
 
   if (gameOver) {
@@ -180,15 +213,24 @@ const GameScreen = ({ onBack, userName, userId }: GameScreenProps) => {
           <Button variant="ghost" size="sm" onClick={onBack}>
             <Icon name="ArrowLeft" size={20} />
           </Button>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 bg-accent/20 px-4 py-2 rounded-full">
-              <Icon name="Coins" size={20} className="text-accent" />
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 bg-accent/20 px-3 py-2 rounded-full">
+              <Icon name="Coins" size={18} className="text-accent" />
               <span className="font-bold text-lg">{score}</span>
             </div>
-            <div className="flex items-center gap-2 bg-destructive/20 px-4 py-2 rounded-full">
-              <Icon name="Heart" size={20} className="text-destructive" />
+            <div className="flex items-center gap-2 bg-destructive/20 px-3 py-2 rounded-full">
+              <Icon name="Heart" size={18} className="text-destructive" />
               <span className="font-bold">{lives}</span>
             </div>
+            <Button
+              onClick={hints > 0 ? useHint : watchAdForHint}
+              size="sm"
+              disabled={usedHint && hints > 0}
+              className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 px-3 py-2 h-auto rounded-full"
+            >
+              <Icon name="Lightbulb" size={18} className="mr-1" />
+              <span className="font-bold">{hints}</span>
+            </Button>
           </div>
         </div>
 
@@ -213,6 +255,8 @@ const GameScreen = ({ onBack, userName, userId }: GameScreenProps) => {
             {currentQuestion.answers.map((answer, index) => {
               let buttonClass = "w-full justify-start text-left h-auto py-4 px-6 text-base transition-all hover:scale-[1.02]";
               
+              const isWrongAnswer = usedHint && index !== currentQuestion.correctAnswer && index % 2 === 0;
+              
               if (selectedAnswer === index) {
                 if (isCorrect) {
                   buttonClass += " bg-green-500/20 border-2 border-green-500 hover:bg-green-500/20";
@@ -222,17 +266,22 @@ const GameScreen = ({ onBack, userName, userId }: GameScreenProps) => {
               } else if (selectedAnswer !== null && index === currentQuestion.correctAnswer) {
                 buttonClass += " bg-green-500/20 border-2 border-green-500";
               }
+              
+              if (isWrongAnswer && selectedAnswer === null) {
+                buttonClass += " opacity-30";
+              }
 
               return (
                 <Button
                   key={index}
                   onClick={() => handleAnswer(index)}
-                  disabled={selectedAnswer !== null}
+                  disabled={selectedAnswer !== null || isWrongAnswer}
                   variant="outline"
                   className={buttonClass}
                 >
                   <span className="mr-3 font-bold text-primary">{String.fromCharCode(65 + index)}</span>
                   <span className="flex-1">{answer}</span>
+                  {isWrongAnswer && <Icon name="Ban" size={20} className="text-muted-foreground" />}
                   {selectedAnswer === index && (
                     <Icon 
                       name={isCorrect ? "CheckCircle2" : "XCircle"} 
