@@ -4,9 +4,10 @@ import Icon from '@/components/ui/icon';
 
 interface LeaderboardScreenProps {
   onBack: () => void;
+  userId: number | null;
 }
 
-const LeaderboardScreen = ({ onBack }: LeaderboardScreenProps) => {
+const LeaderboardScreen = ({ onBack, userId }: LeaderboardScreenProps) => {
   const leaderboardData = [
     { rank: 1, name: 'CryptoMaster', score: 2580, avatar: '👑' },
     { rank: 2, name: 'TON Expert', score: 2340, avatar: '🏆' },

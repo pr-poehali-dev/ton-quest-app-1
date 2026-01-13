@@ -4,13 +4,15 @@ import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import Icon from '@/components/ui/icon';
 import { questions } from '@/data/questions';
+import { hapticFeedback } from '@/lib/telegram';
 
 interface GameScreenProps {
   onBack: () => void;
   userName: string;
+  userId: number | null;
 }
 
-const GameScreen = ({ onBack, userName }: GameScreenProps) => {
+const GameScreen = ({ onBack, userName, userId }: GameScreenProps) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [lives, setLives] = useState(1);
@@ -53,6 +55,7 @@ const GameScreen = ({ onBack, userName }: GameScreenProps) => {
     setIsCorrect(correct);
 
     if (correct) {
+      hapticFeedback.success();
       if (!answeredQuestions.has(currentQuestionIndex)) {
         const points = currentQuestion.difficulty === 'easy' ? 10 : currentQuestion.difficulty === 'medium' ? 20 : 30;
         setScore((prev) => prev + points);
@@ -63,6 +66,7 @@ const GameScreen = ({ onBack, userName }: GameScreenProps) => {
         nextQuestion();
       }, 1500);
     } else {
+      hapticFeedback.error();
       setLives(0);
       setTimeout(() => {
         setGameOver(true);

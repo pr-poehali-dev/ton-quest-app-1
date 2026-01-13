@@ -407,5 +407,405 @@ export const questions: Question[] = [
     correctAnswer: 0,
     difficulty: "hard",
     category: "technical"
+  },
+  {
+    id: 51,
+    question: "Где находится штаб-квартира Telegram?",
+    answers: ["США", "Дубай", "Берлин", "Лондон"],
+    correctAnswer: 1,
+    difficulty: "easy",
+    category: "history"
+  },
+  {
+    id: 52,
+    question: "Сколько пользователей у Telegram на 2024 год?",
+    answers: ["500 млн", "700 млн", "900 млн", "1 млрд+"],
+    correctAnswer: 2,
+    difficulty: "medium",
+    category: "history"
+  },
+  {
+    id: 53,
+    question: "Что такое TON Jetton Wallet?",
+    answers: ["Кошелёк для пользовательских токенов", "Биржа", "NFT маркетплейс", "Майнер"],
+    correctAnswer: 0,
+    difficulty: "medium",
+    category: "tools"
+  },
+  {
+    id: 54,
+    question: "Как называется стандарт NFT в TON?",
+    answers: ["ERC-721", "TRC-721", "TEP-62", "NFT-TON"],
+    correctAnswer: 2,
+    difficulty: "hard",
+    category: "technical"
+  },
+  {
+    id: 55,
+    question: "Что такое lite-client в TON?",
+    answers: ["Легковесный клиент для взаимодействия с блокчейном", "Кошелёк", "Биржа", "Протокол"],
+    correctAnswer: 0,
+    difficulty: "hard",
+    category: "development"
+  },
+  {
+    id: 56,
+    question: "Какой язык использует Павел Дуров для общения?",
+    answers: ["Только русский", "Только английский", "Русский и английский", "Несколько языков"],
+    correctAnswer: 3,
+    difficulty: "medium",
+    category: "history"
+  },
+  {
+    id: 57,
+    question: "Что такое TON меседжи?",
+    answers: ["Сообщения между смарт-контрактами", "Чат в Telegram", "Email сервис", "Уведомления"],
+    correctAnswer: 0,
+    difficulty: "hard",
+    category: "technical"
+  },
+  {
+    id: 58,
+    question: "Какой размер блока в TON?",
+    answers: ["1 MB", "Динамический", "10 MB", "Нет ограничения"],
+    correctAnswer: 1,
+    difficulty: "hard",
+    category: "technical"
+  },
+  {
+    id: 59,
+    question: "Что такое TON nominators?",
+    answers: ["Делегаторы стейка валидаторам", "Кошельки", "Токены", "Контракты"],
+    correctAnswer: 0,
+    difficulty: "medium",
+    category: "technical"
+  },
+  {
+    id: 60,
+    question: "Как называется встроенный кошелёк Telegram?",
+    answers: ["TON Wallet", "Telegram Wallet", "Tonkeeper", "TON Space"],
+    correctAnswer: 1,
+    difficulty: "easy",
+    category: "tools"
+  },
+  {
+    id: 61,
+    question: "Что такое TON Smart Contract Gas?",
+    answers: ["Комиссия за выполнение контракта", "Токен", "Кошелёк", "Протокол"],
+    correctAnswer: 0,
+    difficulty: "medium",
+    category: "technical"
+  },
+  {
+    id: 62,
+    question: "Какой первый проект запустился на TON после возобновления?",
+    answers: ["TON Diamonds", "TON Surf", "Newton", "TON Foundation"],
+    correctAnswer: 2,
+    difficulty: "hard",
+    category: "history"
+  },
+  {
+    id: 63,
+    question: "Что такое bag of cells в TON?",
+    answers: ["Структура данных для хранения", "Токен", "Кошелёк", "Протокол обмена"],
+    correctAnswer: 0,
+    difficulty: "hard",
+    category: "technical"
+  },
+  {
+    id: 64,
+    question: "Как часто происходят выборы валидаторов в TON?",
+    answers: ["Каждый час", "Каждые 18 часов", "Каждый день", "Каждую неделю"],
+    correctAnswer: 1,
+    difficulty: "hard",
+    category: "technical"
+  },
+  {
+    id: 65,
+    question: "Что такое TON Bounced Messages?",
+    answers: ["Возвращённые сообщения при ошибке", "Тип токена", "Протокол", "Кошелёк"],
+    correctAnswer: 0,
+    difficulty: "hard",
+    category: "technical"
+  },
+  {
+    id: 66,
+    question: "Сколько стоил ICO токен Gram?",
+    answers: ["0.37 $", "1 $", "5 $", "10 $"],
+    correctAnswer: 0,
+    difficulty: "medium",
+    category: "history"
+  },
+  {
+    id: 67,
+    question: "Что такое TON Elector?",
+    answers: ["Смарт-контракт выбора валидаторов", "Кошелёк", "Биржа", "Токен"],
+    correctAnswer: 0,
+    difficulty: "hard",
+    category: "technical"
+  },
+  {
+    id: 68,
+    question: "Какой эксплорер используется для TON?",
+    answers: ["Etherscan", "Tonscan", "Tonviewer", "Оба варианта 2 и 3"],
+    correctAnswer: 3,
+    difficulty: "medium",
+    category: "tools"
+  },
+  {
+    id: 69,
+    question: "Что такое TON Config?",
+    answers: ["Конфигурационные параметры сети", "Кошелёк", "Токен", "Биржа"],
+    correctAnswer: 0,
+    difficulty: "hard",
+    category: "technical"
+  },
+  {
+    id: 70,
+    question: "Какую роль играет masterchain в TON?",
+    answers: ["Координирует все workchains", "Хранит токены", "Майнит блоки", "Проводит KYC"],
+    correctAnswer: 0,
+    difficulty: "medium",
+    category: "technical"
+  },
+  {
+    id: 71,
+    question: "Что такое TON Fragment?",
+    answers: ["Маркетплейс для номеров и доменов", "Кошелёк", "Биржа", "NFT коллекция"],
+    correctAnswer: 0,
+    difficulty: "easy",
+    category: "features"
+  },
+  {
+    id: 72,
+    question: "Какой самый дорогой TON домен был продан?",
+    answers: ["ton.ton", "wallet.ton", "crypto.ton", "telegram.ton"],
+    correctAnswer: 0,
+    difficulty: "medium",
+    category: "history"
+  },
+  {
+    id: 73,
+    question: "Что такое TON Getgems?",
+    answers: ["NFT маркетплейс", "Кошелёк", "Биржа", "Игра"],
+    correctAnswer: 0,
+    difficulty: "easy",
+    category: "tools"
+  },
+  {
+    id: 74,
+    question: "Какой минимум для создания смарт-контракта?",
+    answers: ["0.01 TON", "0.05 TON", "0.1 TON", "1 TON"],
+    correctAnswer: 1,
+    difficulty: "medium",
+    category: "technical"
+  },
+  {
+    id: 75,
+    question: "Что такое TON Labs?",
+    answers: ["Команда разработчиков TON", "Кошелёк", "Биржа", "Токен"],
+    correctAnswer: 0,
+    difficulty: "medium",
+    category: "history"
+  },
+  {
+    id: 76,
+    question: "Какой максимальный TPS достигнут в тестах TON?",
+    answers: ["10,000", "100,000", "1,000,000", "55,000"],
+    correctAnswer: 3,
+    difficulty: "hard",
+    category: "performance"
+  },
+  {
+    id: 77,
+    question: "Что такое TON Mempool?",
+    answers: ["Нет мемпула в классическом понимании", "Очередь транзакций", "Тип токена", "Кошелёк"],
+    correctAnswer: 0,
+    difficulty: "hard",
+    category: "technical"
+  },
+  {
+    id: 78,
+    question: "Какой брат Павла работал с ним над VK?",
+    answers: ["Николай", "Алексей", "Дмитрий", "Иван"],
+    correctAnswer: 0,
+    difficulty: "medium",
+    category: "history"
+  },
+  {
+    id: 79,
+    question: "Что такое TON Subscriptions?",
+    answers: ["Регулярные автоплатежи", "Токены", "NFT", "Биржа"],
+    correctAnswer: 0,
+    difficulty: "medium",
+    category: "features"
+  },
+  {
+    id: 80,
+    question: "Как называется основной токен стандарт в TON?",
+    answers: ["Jetton", "Token", "Coin", "Asset"],
+    correctAnswer: 0,
+    difficulty: "easy",
+    category: "technical"
+  },
+  {
+    id: 81,
+    question: "Что такое TON Nominator Pool?",
+    answers: ["Пул для коллективного стейкинга", "Биржа", "Кошелёк", "NFT"],
+    correctAnswer: 0,
+    difficulty: "medium",
+    category: "features"
+  },
+  {
+    id: 82,
+    question: "Какой университет назван в честь отца Павла Дурова?",
+    answers: ["МГУ", "ИТМО", "СПбГУ", "МФТИ"],
+    correctAnswer: 2,
+    difficulty: "hard",
+    category: "history"
+  },
+  {
+    id: 83,
+    question: "Что такое TON Instant Hypercube Routing?",
+    answers: ["Алгоритм маршрутизации сообщений", "Токен", "Кошелёк", "Протокол"],
+    correctAnswer: 0,
+    difficulty: "hard",
+    category: "technical"
+  },
+  {
+    id: 84,
+    question: "Какой процент комиссии берёт TON Fragment?",
+    answers: ["2.5%", "5%", "7.5%", "10%"],
+    correctAnswer: 1,
+    difficulty: "medium",
+    category: "features"
+  },
+  {
+    id: 85,
+    question: "Что такое TON Catchain?",
+    answers: ["Протокол консенсуса валидаторов", "Токен", "Кошелёк", "Игра"],
+    correctAnswer: 0,
+    difficulty: "hard",
+    category: "technical"
+  },
+  {
+    id: 86,
+    question: "Сколько Toncoin было создано изначально?",
+    answers: ["5 млрд", "10 млрд", "Нет лимита", "1 млрд"],
+    correctAnswer: 0,
+    difficulty: "medium",
+    category: "history"
+  },
+  {
+    id: 87,
+    question: "Что такое TON Liteserver?",
+    answers: ["Лёгкий сервер для доступа к блокчейну", "Кошелёк", "Биржа", "Токен"],
+    correctAnswer: 0,
+    difficulty: "hard",
+    category: "technical"
+  },
+  {
+    id: 88,
+    question: "Какая награда за блок для валидаторов?",
+    answers: ["Фиксированная", "Динамическая из комиссий", "Нет награды", "100 TON"],
+    correctAnswer: 1,
+    difficulty: "hard",
+    category: "technical"
+  },
+  {
+    id: 89,
+    question: "Что такое TON Anonymous Numbers?",
+    answers: ["Виртуальные номера в Telegram", "Токены", "Кошельки", "Контракты"],
+    correctAnswer: 0,
+    difficulty: "easy",
+    category: "features"
+  },
+  {
+    id: 90,
+    question: "Какой язык программирования знает Павел Дуров?",
+    answers: ["C++", "Python", "Pascal", "Все перечисленные"],
+    correctAnswer: 3,
+    difficulty: "medium",
+    category: "history"
+  },
+  {
+    id: 91,
+    question: "Что такое TON Cell?",
+    answers: ["Базовая единица хранения данных", "Токен", "Кошелёк", "Протокол"],
+    correctAnswer: 0,
+    difficulty: "hard",
+    category: "technical"
+  },
+  {
+    id: 92,
+    question: "Какой максимальный размер Cell в TON?",
+    answers: ["1023 бита", "2048 бит", "4096 бит", "Без ограничений"],
+    correctAnswer: 0,
+    difficulty: "hard",
+    category: "technical"
+  },
+  {
+    id: 93,
+    question: "Что такое TON Infinite Sharding Paradigm?",
+    answers: ["Автоматическое разделение на шарды", "Токен", "Кошелёк", "Биржа"],
+    correctAnswer: 0,
+    difficulty: "hard",
+    category: "technical"
+  },
+  {
+    id: 94,
+    question: "Как называется кошелёк от TON Foundation?",
+    answers: ["Tonkeeper", "TON Wallet", "Tonhub", "MyTonWallet"],
+    correctAnswer: 0,
+    difficulty: "easy",
+    category: "tools"
+  },
+  {
+    id: 95,
+    question: "Что такое TON DHT?",
+    answers: ["Децентрализованная хеш-таблица", "Токен", "Кошелёк", "Протокол обмена"],
+    correctAnswer: 0,
+    difficulty: "hard",
+    category: "technical"
+  },
+  {
+    id: 96,
+    question: "Сколько лет Николаю Дурову?",
+    answers: ["Старше Павла", "Моложе Павла", "Близнецы", "Ровесники"],
+    correctAnswer: 0,
+    difficulty: "medium",
+    category: "history"
+  },
+  {
+    id: 97,
+    question: "Что такое TON ADNL?",
+    answers: ["Abstract Datagram Network Layer", "Токен", "Кошелёк", "Биржа"],
+    correctAnswer: 0,
+    difficulty: "hard",
+    category: "technical"
+  },
+  {
+    id: 98,
+    question: "Какой процент APY для стейкинга TON?",
+    answers: ["2-4%", "5-7%", "10-15%", "Варьируется"],
+    correctAnswer: 3,
+    difficulty: "medium",
+    category: "features"
+  },
+  {
+    id: 99,
+    question: "Что такое TON Overlay Networks?",
+    answers: ["Подсети для приватного общения", "Токены", "Кошельки", "Биржи"],
+    correctAnswer: 0,
+    difficulty: "hard",
+    category: "technical"
+  },
+  {
+    id: 100,
+    question: "Какой самый популярный DEX на TON?",
+    answers: ["Uniswap", "DeDust", "PancakeSwap", "SushiSwap"],
+    correctAnswer: 1,
+    difficulty: "medium",
+    category: "tools"
   }
 ];

@@ -1,25 +1,58 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
 import GameScreen from '@/components/GameScreen';
 import LeaderboardScreen from '@/components/LeaderboardScreen';
 import ProfileScreen from '@/components/ProfileScreen';
+import { getTelegramUser, initTelegramWebApp, isTelegramWebApp, hapticFeedback } from '@/lib/telegram';
 
 type Screen = 'home' | 'game' | 'leaderboard' | 'profile';
 
 const Index = () => {
   const [currentScreen, setCurrentScreen] = useState<Screen>('home');
   const [userName, setUserName] = useState<string>('Игрок');
+  const [userId, setUserId] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    initTelegramWebApp();
+    
+    const telegramUser = getTelegramUser();
+    if (telegramUser) {
+      setUserName(telegramUser.firstName + (telegramUser.lastName ? ` ${telegramUser.lastName}` : ''));
+      setUserId(telegramUser.id);
+    }
+    
+    setTimeout(() => setIsLoading(false), 500);
+  }, []);
+
+  const handleScreenChange = (screen: Screen) => {
+    hapticFeedback.light();
+    setCurrentScreen(screen);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-purple-900/20 to-background">
+        <div className="text-center space-y-4 animate-scale-in">
+          <div className="text-6xl animate-pulse">💎</div>
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+            Загрузка TON Quiz...
+          </h2>
+        </div>
+      </div>
+    );
+  }
 
   const renderScreen = () => {
     switch (currentScreen) {
       case 'game':
-        return <GameScreen onBack={() => setCurrentScreen('home')} userName={userName} />;
+        return <GameScreen onBack={() => handleScreenChange('home')} userName={userName} userId={userId} />;
       case 'leaderboard':
-        return <LeaderboardScreen onBack={() => setCurrentScreen('home')} />;
+        return <LeaderboardScreen onBack={() => handleScreenChange('home')} userId={userId} />;
       case 'profile':
-        return <ProfileScreen onBack={() => setCurrentScreen('home')} userName={userName} setUserName={setUserName} />;
+        return <ProfileScreen onBack={() => handleScreenChange('home')} userName={userName} setUserName={setUserName} userId={userId} />;
       default:
         return (
           <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-background via-purple-900/20 to-background">
@@ -36,10 +69,27 @@ const Index = () => {
                 </p>
               </div>
 
+              {isTelegramWebApp() && (
+                <Card className="p-4 bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/20">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-xl font-bold">
+                      {userName.charAt(0)}
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-bold">{userName}</div>
+                      <div className="text-xs text-muted-foreground flex items-center gap-1">
+                        <Icon name="Check" size={12} className="text-green-400" />
+                        Вход через Telegram
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              )}
+
               <Card className="p-8 bg-card/50 backdrop-blur-lg border-2 border-primary/20 shadow-2xl shadow-primary/10">
                 <div className="space-y-4">
                   <Button
-                    onClick={() => setCurrentScreen('game')}
+                    onClick={() => handleScreenChange('game')}
                     size="lg"
                     className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-lg font-bold h-14 shadow-lg shadow-primary/30 transition-all hover:scale-105"
                   >
@@ -49,7 +99,7 @@ const Index = () => {
 
                   <div className="grid grid-cols-2 gap-3">
                     <Button
-                      onClick={() => setCurrentScreen('leaderboard')}
+                      onClick={() => handleScreenChange('leaderboard')}
                       variant="outline"
                       size="lg"
                       className="border-2 border-primary/30 hover:bg-primary/10 hover:border-primary/50 transition-all hover:scale-105"
@@ -58,7 +108,7 @@ const Index = () => {
                       Рейтинг
                     </Button>
                     <Button
-                      onClick={() => setCurrentScreen('profile')}
+                      onClick={() => handleScreenChange('profile')}
                       variant="outline"
                       size="lg"
                       className="border-2 border-secondary/30 hover:bg-secondary/10 hover:border-secondary/50 transition-all hover:scale-105"
@@ -76,10 +126,22 @@ const Index = () => {
                   <div className="space-y-1">
                     <p>⏱️ 20 секунд на вопрос</p>
                     <p>❤️ 1 жизнь за игру</p>
-                    <p>🎯 Вопросы от простых до сложных</p>
+                    <p>🎯 100 вопросов разной сложности</p>
+                    <p>🏆 Соревнуйся с друзьями!</p>
                   </div>
                 </div>
               </div>
+
+              {!isTelegramWebApp() && (
+                <Card className="p-4 bg-accent/10 border border-accent/20">
+                  <div className="flex items-center gap-3 text-sm">
+                    <Icon name="AlertTriangle" size={20} className="text-accent" />
+                    <p className="text-muted-foreground">
+                      Для полного функционала откройте приложение через Telegram Mini App
+                    </p>
+                  </div>
+                </Card>
+              )}
             </div>
           </div>
         );
@@ -96,7 +158,7 @@ const Index = () => {
             <Button
               variant={currentScreen === 'home' ? 'default' : 'ghost'}
               size="sm"
-              onClick={() => setCurrentScreen('home')}
+              onClick={() => handleScreenChange('home')}
               className="flex-1 flex flex-col items-center gap-1 h-auto py-2"
             >
               <Icon name="Home" size={20} />
@@ -105,7 +167,7 @@ const Index = () => {
             <Button
               variant={currentScreen === 'game' ? 'default' : 'ghost'}
               size="sm"
-              onClick={() => setCurrentScreen('game')}
+              onClick={() => handleScreenChange('game')}
               className="flex-1 flex flex-col items-center gap-1 h-auto py-2"
             >
               <Icon name="Gamepad2" size={20} />
@@ -114,7 +176,7 @@ const Index = () => {
             <Button
               variant={currentScreen === 'leaderboard' ? 'default' : 'ghost'}
               size="sm"
-              onClick={() => setCurrentScreen('leaderboard')}
+              onClick={() => handleScreenChange('leaderboard')}
               className="flex-1 flex flex-col items-center gap-1 h-auto py-2"
             >
               <Icon name="Trophy" size={20} />
@@ -123,7 +185,7 @@ const Index = () => {
             <Button
               variant={currentScreen === 'profile' ? 'default' : 'ghost'}
               size="sm"
-              onClick={() => setCurrentScreen('profile')}
+              onClick={() => handleScreenChange('profile')}
               className="flex-1 flex flex-col items-center gap-1 h-auto py-2"
             >
               <Icon name="User" size={20} />

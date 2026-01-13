@@ -8,9 +8,10 @@ interface ProfileScreenProps {
   onBack: () => void;
   userName: string;
   setUserName: (name: string) => void;
+  userId: number | null;
 }
 
-const ProfileScreen = ({ onBack, userName, setUserName }: ProfileScreenProps) => {
+const ProfileScreen = ({ onBack, userName, setUserName, userId }: ProfileScreenProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [tempName, setTempName] = useState(userName);
 
@@ -77,10 +78,12 @@ const ProfileScreen = ({ onBack, userName, setUserName }: ProfileScreenProps) =>
               </div>
             )}
             
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Icon name="Hash" size={14} />
-              <span>Telegram ID: 123456789</span>
-            </div>
+            {userId && (
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Icon name="Hash" size={14} />
+                <span>Telegram ID: {userId}</span>
+              </div>
+            )}
           </div>
         </Card>
 
